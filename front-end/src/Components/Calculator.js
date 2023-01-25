@@ -3,7 +3,7 @@ import DateTimePicker from "react-datetime-picker";
 import "./Style.css";
 
 //surcharge from delivery fee
-const CartValueMoney = () => {
+const cartValueMoney = () => {
   const cartValue = 20;
   let newDeliveryPrice;
   if (cartValue < 10) {
@@ -17,29 +17,38 @@ const CartValueMoney = () => {
 
 //calculating fee based on delivery distance
 const feeBasedOnDeliveryDistance = () => {
-  const deliveryDistance = 3250;
-  const baseFeeAfterFirst1000 = 2;
-  let deliveryDistanceFee;
-  if (deliveryDistance < 500) {
-    deliveryDistanceFee = 1;
-  } else if (deliveryDistance > 500 && deliveryDistance <= 1000) {
-    deliveryDistanceFee = 2;
-  } else if (deliveryDistance > 1000) {
-    const surchargeDistance = (deliveryDistance - 1000) / 500;
-    console.log("Surcharge distance", surchargeDistance);
-    if (surchargeDistance >= 1) {
-      deliveryDistanceFee = baseFeeAfterFirst1000 + surchargeDistance * 1;
-    }
+  const deliveryDistance = 2000;
+  const fractionDistance = 500;
+  const baseDistance = 1000;
+  const baseFee = 2;
+  let deliveryDistanceFee = 0;
+
+  if (deliveryDistance < baseDistance) {
+    return deliveryDistanceFee;
   }
 
-  return deliveryDistanceFee;
+  if (deliveryDistance === 1000) {
+    deliveryDistanceFee = baseFee;
+    return deliveryDistanceFee;
+  } else if (deliveryDistance > 1000) {
+    const surchargeDistance = deliveryDistance - baseDistance;
+    const multiple = surchargeDistance / fractionDistance;
+    let baseMultiple = Math.floor(multiple);
+    const tailingMultiple = surchargeDistance - baseMultiple * fractionDistance;
+
+    if (tailingMultiple > 0) {
+      ++baseMultiple;
+    }
+    console.log(baseFee + baseMultiple);
+    return baseFee + baseMultiple;
+  }
 };
 
 //delivery fee based on number of items
 
 const feeBasedOnNumberOfItems = () => {
-  const numberOfItems = 13;
-  let deliverySurcharge;
+  const numberOfItems = 14;
+  let deliverySurcharge = 0;
   if (numberOfItems < 5) {
     deliverySurcharge = 0;
   } else if (numberOfItems === 5) {
@@ -47,13 +56,32 @@ const feeBasedOnNumberOfItems = () => {
   } else if (numberOfItems > 5 && numberOfItems < 12) {
     deliverySurcharge = 0.5 + (numberOfItems - 5) * 0.5;
   } else if (numberOfItems > 12) {
-    deliverySurcharge = 0.5 + (numberOfItems - 5) *0.5+ 1.2;
+    deliverySurcharge = 0.5 + (numberOfItems - 5) * 0.5 + 1.2;
   }
   return deliverySurcharge;
 };
 
+//final delivery dee
+const finalDeliveryfee = () => {
+  const CartValueMoney = cartValueMoney();
+  const numberOfItemsSurcharge = feeBasedOnNumberOfItems();
+  const distanceBasedFee = feeBasedOnDeliveryDistance();
+  let finalDeliveryfee;
+  if (CartValueMoney >= 100) {
+    finalDeliveryfee = 0;
+  } else {
+    const finalDeliveryfees = numberOfItemsSurcharge + distanceBasedFee;
+    if (finalDeliveryfees >= 15) {
+      finalDeliveryfee = 15;
+    } else {
+      finalDeliveryfee = finalDeliveryfees;
+    }
+  }
+  return finalDeliveryfee;
+};
+
 function Calculator() {
-  const deliverDistanceFee = feeBasedOnNumberOfItems();
+  const deliverFee = finalDeliveryfee();
   const [value, onChange] = useState(new Date());
   return (
     <div className="calcDiv">
@@ -87,7 +115,7 @@ function Calculator() {
       </div>
       <div className="resultColumn">
         <p>Delivery price: </p>
-        <p>{deliverDistanceFee}€</p>
+        <p>{deliverFee}€</p>
       </div>
       <div className="footerDiv"></div>
     </div>
