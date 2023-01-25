@@ -1,0 +1,34 @@
+.calcDiv {
+margin-top: 100px;
+  margin-left: 20%;
+  border: 5px solid green;
+  border-radius: 10px;
+  float: left;
+  width: 50%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+
+.calcColumn{
+    
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+
+.header{
+    border:2px solid green;
+    width:100%;
+}
+
+.calcDivItems{
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+}
+
+.footerDiv{
+    border: 2px solid green;
+    height: 30px;
+}
