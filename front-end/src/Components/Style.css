@@ -28,6 +28,13 @@ margin-top: 100px;
     padding: 5px;
 }
 
+.resultColumn{
+    
+    display: flex;
+    flex-direction: row;
+    
+}
+
 .footerDiv{
     border: 2px solid green;
     height: 30px;
